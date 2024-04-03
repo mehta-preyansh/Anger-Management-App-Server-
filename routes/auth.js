@@ -2,6 +2,10 @@ const router = require('express').Router()
 const User = require("../modals/user")
 const bcrypt = require("bcrypt")
 
+router.get("/", (req,res)=>{
+  res.send("HI")
+})
+
 router.post("/login", async (req,res)=>{
   const { username, password } = req.body;
   try {
