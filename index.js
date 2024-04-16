@@ -9,6 +9,8 @@ app.use(express.json())
 
 const authRoutes = require('./routes/auth')
 app.use(authRoutes)
+const logRoutes = require('./routes/angerLog')
+app.use(logRoutes)
 
 const connectDB = require('./config/db')
 connectDB()
