@@ -6,7 +6,7 @@ const {ObjectId} = require('mongodb')
 router.post('/event', async (req, res) => {
   const username = req.body.username
   const data = req.body.details
-  const { reason, dateStart, dateEnd, level } = { ...data }
+  const { reason, startTime, endTime, date, level } = { ...data }
 
   // console.log(reason, level, date)
   const user = await User.findOne({ username });
@@ -21,8 +21,9 @@ router.post('/event', async (req, res) => {
       const newEvent = {
         reason,
         angerLevel: level,
-        dateStart,
-        dateEnd
+        startTime,
+        endTime,
+        date
       }
       user.events.push(newEvent)
       await user.save()
