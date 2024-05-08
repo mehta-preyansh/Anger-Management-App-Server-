@@ -11,11 +11,15 @@ const eventSchema = new mongoose.Schema({
     min: 1,
     max: 10
   },
-  dateStart: {
+  startTime: {
     type: Date,
     default: Date.now
   },
-  dateEnd: {
+  endTime: {
+    type: Date,
+    default: Date.now
+  },
+  date: {
     type: Date,
     default: Date.now
   }
