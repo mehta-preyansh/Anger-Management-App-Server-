@@ -26,9 +26,11 @@ router.post("/notification", async (req,res)=>{
 router.get("/notification", async (req,res)=>{
   const { verificationCode } = req.query;
   if(verificationCode==="27eaefd5c28d640d3254fc819146d5b71e4a3c07d926a5944baaa4f7dd122fa3"){
+    console.log("Notification sent")
     return res.status(204).send()
   }
   else{
+    console.log("Notification not sent")
     return res.status(404).send()
   }
   
