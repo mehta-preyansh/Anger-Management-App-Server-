@@ -52,7 +52,7 @@ router.delete("/logout", async (req,res)=>{
     }
 
     // Update the user document to remove the specific device ID from the array
-    await User.updateOne(
+    await user.updateOne(
       { username },
       { $pull: { deviceId: deviceId } }
     );
