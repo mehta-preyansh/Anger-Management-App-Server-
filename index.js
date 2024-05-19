@@ -13,6 +13,8 @@ const logRoutes = require('./routes/angerLog')
 app.use(logRoutes)
 const notificationRoutes = require('./routes/notification')
 app.use(notificationRoutes)
+const fitbitRoutes = require('./routes/fitbit')
+app.use(fitbitRoutes)
 
 const connectDB = require('./config/db')
 connectDB()
