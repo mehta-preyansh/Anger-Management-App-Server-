@@ -1,6 +1,8 @@
 const router = require('express').Router()
 const User = require("../modals/user")
 const bcrypt = require("bcrypt")
+const dotenv = require('dotenv')
+dotenv.config()
 
 router.post("/notification", async (req,res)=>{
   const { updates } = req.body;
@@ -23,9 +25,10 @@ router.post("/notification", async (req,res)=>{
     res.status(500).send({ message: 'Internal server error' });
   }
 })
+
 router.get("/notification", async (req,res)=>{
   const { verificationCode } = req.query;
-  if(verificationCode==="27eaefd5c28d640d3254fc819146d5b71e4a3c07d926a5944baaa4f7dd122fa3"){
+  if(verificationCode===process.env.VERIFICATION_CODE){
     console.log("Notification sent")
     return res.status(204).send()
   }
