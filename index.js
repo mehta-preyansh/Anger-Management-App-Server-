@@ -11,6 +11,8 @@ const authRoutes = require('./routes/auth')
 app.use(authRoutes)
 const logRoutes = require('./routes/angerLog')
 app.use(logRoutes)
+const notificationRoutes = require('./routes/notification')
+app.use(notificationRoutes)
 
 const connectDB = require('./config/db')
 connectDB()
