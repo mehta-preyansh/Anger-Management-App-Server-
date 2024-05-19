@@ -38,6 +38,31 @@ router.post("/login", async (req,res)=>{
   }
 })
 
+router.delete("/logout", async (req,res)=>{
+  const { username, deviceId } = req.body;
+
+  if (!username || !deviceId) {
+    return res.status(400).send({ message: 'Username and device ID are required' });
+  }
+
+  try {
+    const user = await User.findOne({ username });
+    if (!user) {
+      return res.status(404).send({ message: 'User not found' });
+    }
+
+    // Update the user document to remove the specific device ID from the array
+    await User.updateOne(
+      { username },
+      { $pull: { deviceId: deviceId } }
+    );
+
+    res.status(200).send({ message: 'Device ID deleted successfully' });
+  } catch (error) {
+    res.status(500).send({ message: 'Server error', error });
+  }
+})
+
 router.post("/register", async (req,res)=>{
   const { username, password, email, mobile } = req.body;
   //Check if user already exists
