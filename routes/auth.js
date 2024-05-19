@@ -8,10 +8,11 @@ router.get("/", (req,res)=>{
 
 router.post("/login", async (req,res)=>{
   const { username, password, deviceId } = req.body;
+  console.log(req.body)
+  console.log(deviceId.length)
   try {
     // Find user by username
     const user = await User.findOne({ username });
-    console.log(user)
     if (!user || user==null) {
       // User not found
       return res.status(401).send({ message: 'User does not exist' });
