@@ -8,8 +8,6 @@ router.get("/", (req,res)=>{
 
 router.post("/login", async (req,res)=>{
   const { username, password, deviceId } = req.body;
-  console.log(req.body)
-  console.log(deviceId.length)
   try {
     // Find user by username
     const user = await User.findOne({ username });
@@ -23,17 +21,14 @@ router.post("/login", async (req,res)=>{
       return res.status(401).send({ message: 'Invalid credentials' });
     }
     //Add device id to user
-    if(deviceId.length){
-      try{
-        user.deviceId.push(deviceId[0]);
-        await user.save();
-        return res.status(200).send({ message: 'Login successful', user: user, status: 200, deviceAdded: true});
-      }
-      catch(error){
-        return res.status(200).send({ message: 'Login successful', user: user, status: 200, deviceAdded: false});
-      }
+    try{
+      user.deviceId.push(deviceId[0]);
+      await user.save();
+      return res.status(200).send({ message: 'Login successful', user: user, status: 200, deviceAdded: true});
     }
-    return res.status(200).send({ message: 'Login successful', user: user, status: 200, deviceAdded: false})
+    catch(error){
+      return res.status(200).send({ message: 'Login successful', user: user, status: 200, deviceAdded: false});
+    }
     
     //Authentication successful
 
