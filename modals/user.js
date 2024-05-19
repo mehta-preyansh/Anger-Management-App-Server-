@@ -44,7 +44,13 @@ const User = mongoose.model('User', new mongoose.Schema({
   mobileNumber: {
     type: String,
   },
-  events: [eventSchema]
+  events: [eventSchema],
+  deviceId: {
+    type: [String],
+  },
+  fitbitUserId: {
+    type: String,
+  }
 }));
 
 module.exports = User
