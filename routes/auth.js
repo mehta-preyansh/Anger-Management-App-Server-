@@ -52,10 +52,11 @@ router.delete("/logout", async (req,res)=>{
     }
 
     // Update the user document to remove the specific device ID from the array
-    await user.updateOne(
-      { username },
-      { $pull: { deviceId: deviceId } }
-    );
+    const index = user.deviceId.indexOf(deviceId);
+    if (index !== -1) {
+      user.deviceId.splice(index, 1); // Remove the device ID from the array
+      await user.save(); // Save the updated user document
+    }
 
     res.status(200).send({ message: 'Device ID deleted successfully' });
   } catch (error) {
