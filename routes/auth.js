@@ -66,6 +66,7 @@ router.delete("/logout", async (req,res)=>{
 
 router.post("/register", async (req,res)=>{
   const { username, password, email, mobile } = req.body;
+  console.log(req.body)
   //Check if user already exists
   const existingUser = await User.findOne({ $or: [{ email }, { username }] });
   if (existingUser) {

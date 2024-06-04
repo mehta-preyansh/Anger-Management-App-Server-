@@ -1,5 +1,6 @@
 const router = require('express').Router()
 const User = require("../modals/user")
+const downloadResource = require('../utils/downloadResource')
 const bcrypt = require("bcrypt")
 const {ObjectId} = require('mongodb')
 
@@ -38,9 +39,10 @@ router.post('/event', async (req, res) => {
 })
 
 router.get('/events', async (req, res) => {
-  const username = req.query.username
+  const username = req.query.username;
   const user = await User.findOne({ username });
-  if (user.events.length === 0) {
+  console.log(user)
+  if (user && user.events.length === 0) {
     res.status(204).json({ message: "No log events yet" })
   }
   else {
@@ -64,4 +66,33 @@ router.delete('/user/:userId/logs/:logId', async (req, res) => {
   }
 })
 
+router.get('/download', async (req, res) => {
+  const username = req.query.username;
+  const user = await User.findOne({ username });
+  const fields = [
+    {
+      label: 'Reason',
+      value: 'reason'
+    },
+    {
+      label: 'Anger level',
+      value: 'angerLevel'
+    },
+    {
+     label: 'Date',
+      value: 'date'
+    },
+    {
+     label: 'Start Time',
+      value: 'startTime'
+    },
+    {
+     label: 'End time',
+      value: 'endTime'
+    }
+  ];
+  const data = user.events
+  console.log(data)
+  return downloadResource(res, `${username}.csv`, fields, data);
+ })
 module.exports = router
