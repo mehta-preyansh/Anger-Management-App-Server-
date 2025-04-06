@@ -1,4 +1,4 @@
-const { default: mongoose } = require("mongoose");
+import mongoose from "mongoose";
 
 const eventSchema = new mongoose.Schema({
   reason: {
@@ -23,7 +23,7 @@ const eventSchema = new mongoose.Schema({
     type: Date,
     default: Date.now
   }
-})
+});
 
 // User model
 const User = mongoose.model('User', new mongoose.Schema({
@@ -53,4 +53,4 @@ const User = mongoose.model('User', new mongoose.Schema({
   }
 }));
 
-module.exports = User
+export default User;

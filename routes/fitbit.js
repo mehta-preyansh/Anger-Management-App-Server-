@@ -1,7 +1,8 @@
-const router = require('express').Router()
-const User = require("../modals/user")
-const bcrypt = require("bcrypt")
+import { Router } from 'express';
+import User from "../modals/user.js";
+import bcrypt from "bcrypt";
 
+const router = Router();
 
 router.post("/userId", async (req,res)=>{
   const { username, userId } = req.body;
@@ -19,5 +20,4 @@ router.post("/userId", async (req,res)=>{
   }
 })
 
-
-module.exports=router
+export default router;

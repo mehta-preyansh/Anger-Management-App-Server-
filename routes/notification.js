@@ -1,8 +1,10 @@
-const router = require('express').Router()
-const User = require("../modals/user")
-const bcrypt = require("bcrypt")
-const dotenv = require('dotenv')
-dotenv.config()
+import { Router } from 'express';
+import User from "../modals/user.js";
+import bcrypt from "bcrypt";
+import dotenv from 'dotenv';
+dotenv.config();
+
+const router = Router();
 
 router.post("/notification", async (req,res)=>{
   console.log(req.body)
@@ -22,4 +24,4 @@ router.get("/notification", async (req,res)=>{
   
 })
 
-module.exports=router
+export default router;

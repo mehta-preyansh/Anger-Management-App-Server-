@@ -1,5 +1,6 @@
-const dotenv = require('dotenv')
-dotenv.config()
+import dotenv from 'dotenv';
+dotenv.config();
+
 const serviceAccountKey = {
   "type": "service_account",
   "project_id": "anger-management-9d8a2",
@@ -12,5 +13,6 @@ const serviceAccountKey = {
   "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
   "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/firebase-adminsdk-fq7uq%40anger-management-9d8a2.iam.gserviceaccount.com",
   "universe_domain": "googleapis.com"
-}
-module.exports = serviceAccountKey
+};
+
+export default serviceAccountKey;

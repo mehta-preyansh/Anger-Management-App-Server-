@@ -1,8 +1,10 @@
-const router = require('express').Router()
-const User = require("../modals/user")
-const downloadResource = require('../utils/downloadResource')
-const bcrypt = require("bcrypt")
-const {ObjectId} = require('mongodb')
+import { Router } from 'express';
+import User from "../modals/user.js";
+import downloadResource from '../utils/downloadResource.js';
+import bcrypt from "bcrypt";
+import { ObjectId } from 'mongodb';
+
+const router = Router();
 
 router.post('/event', async (req, res) => {
   const username = req.body.username
@@ -95,4 +97,5 @@ router.get('/download', async (req, res) => {
   console.log(data)
   return downloadResource(res, `${username}.csv`, fields, data);
  })
-module.exports = router
+
+export default router;

@@ -1,6 +1,8 @@
-const router = require('express').Router()
-const User = require("../modals/user")
-const bcrypt = require("bcrypt")
+import { Router } from 'express';
+import User from "../modals/user.js";
+import bcrypt from "bcrypt";
+
+const router = Router();
 
 router.get("/", (req,res)=>{
   res.send("Anger App - Server")
@@ -86,4 +88,4 @@ router.post("/register", async (req,res)=>{
   }
 })
 
-module.exports=router
+export default router;
