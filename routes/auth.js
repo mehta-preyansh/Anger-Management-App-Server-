@@ -1,91 +1,122 @@
-import { Router } from 'express';
-import User from "../modals/user.js";
-import bcrypt from "bcrypt";
+// ==============================================
+// authRoutes.js - Handles registration, login, and logout
+// ==============================================
 
-const router = Router();
+// Import required modules
+import { Router } from 'express'
+import User from "../modals/user.js"
+import bcrypt from "bcrypt"
 
-router.get("/", (req,res)=>{
+// Create an Express Router instance
+const router = Router()
+
+// ==========================
+// @route   GET /
+// @desc    Default root endpoint (server check)
+// @access  Public
+// ==========================
+router.get("/", (req, res) => {
   res.send("Anger App - Server")
 })
 
-router.post("/login", async (req,res)=>{
-  const { username, password, deviceId } = req.body;
+// ==========================
+// @route   POST /login
+// @desc    Authenticate user, attach device ID
+// @access  Public (can be protected with rate limiting or CAPTCHA)
+// ==========================
+router.post("/login", async (req, res) => {
+  const { username, password, deviceId } = req.body
+
   try {
     // Find user by username
-    const user = await User.findOne({ username });
-    if (!user || user==null) {
-      // User not found
-      return res.status(401).send({ message: 'User does not exist' });
-    } 
-    //Compare passwords
-    const passwordsMatch = await bcrypt.compare(password, user.password);
+    const user = await User.findOne({ username })
+
+    if (!user) {
+      return res.status(401).send({ message: 'User does not exist' })
+    }
+
+    // Compare passwords using bcrypt
+    const passwordsMatch = await bcrypt.compare(password, user.password)
     if (!passwordsMatch) {
-      return res.status(401).send({ message: 'Invalid credentials' });
+      return res.status(401).send({ message: 'Invalid credentials' })
     }
-    //Add device id to user
-    try{
-      user.deviceId.push(deviceId[0]);
-      await user.save();
-      return res.status(200).send({ message: 'Login successful', user: user, status: 200, deviceAdded: true});
+
+    // Add new device ID to user's record (first index assumed)
+    try {
+      user.deviceId.push(deviceId[0])
+      await user.save()
+      return res.status(200).send({ message: 'Login successful', user, status: 200, deviceAdded: true })
+    } catch (error) {
+      // ✅ Login succeeds even if device ID couldn't be saved
+      return res.status(200).send({ message: 'Login successful', user, status: 200, deviceAdded: false })
     }
-    catch(error){
-      return res.status(200).send({ message: 'Login successful', user: user, status: 200, deviceAdded: false});
-    }
-    
-    //Authentication successful
 
   } catch (error) {
-    // console.error('Error:', error);
-    res.status(500).send({ message: 'Internal server error' });
+    // Internal error
+    res.status(500).send({ message: 'Internal server error' })
   }
 })
 
-router.delete("/logout", async (req,res)=>{
-  const { username, deviceId } = req.body;
+// ==========================
+// @route   DELETE /logout
+// @desc    Removes the current device ID from user's list
+// @access  Public (ideally, secure with auth token)
+// ==========================
+router.delete("/logout", async (req, res) => {
+  const { username, deviceId } = req.body
 
   if (!username || !deviceId) {
-    return res.status(400).send({ message: 'Username and device ID are required' });
+    return res.status(400).send({ message: 'Username and device ID are required' })
   }
 
   try {
-    const user = await User.findOne({ username });
+    const user = await User.findOne({ username })
+
     if (!user) {
-      return res.status(404).send({ message: 'User not found' });
+      return res.status(404).send({ message: 'User not found' })
     }
 
-    // Update the user document to remove the specific device ID from the array
-    const index = user.deviceId.indexOf(deviceId);
+    // Remove the device ID from user's list
+    const index = user.deviceId.indexOf(deviceId)
     if (index !== -1) {
-      user.deviceId.splice(index, 1); // Remove the device ID from the array
-      await user.save(); // Save the updated user document
+      user.deviceId.splice(index, 1)
+      await user.save()
     }
 
-    res.status(200).send({ message: 'Device ID deleted successfully' });
+    res.status(200).send({ message: 'Device ID deleted successfully' })
   } catch (error) {
-    res.status(500).send({ message: 'Server error', error });
+    res.status(500).send({ message: 'Server error', error })
   }
 })
 
-router.post("/register", async (req,res)=>{
-  const { username, password, email, mobile } = req.body;
-  console.log(req.body)
-  //Check if user already exists
-  const existingUser = await User.findOne({ $or: [{ email }, { username }] });
+// ==========================
+// @route   POST /register
+// @desc    Create a new user account
+// @access  Public
+// ==========================
+router.post("/register", async (req, res) => {
+  const { username, password, email, mobile } = req.body
+  console.log(req.body) // ✅ For debugging; remove or guard with NODE_ENV in production
+
+  // Check for existing user with same email or username
+  const existingUser = await User.findOne({ $or: [{ email }, { username }] })
   if (existingUser) {
-    return res.status(400).send({ message: 'Email or username already in use' });
+    return res.status(400).send({ message: 'Email or username already in use' })
   }
+
   try {
-    //Hash password
-    const hashedPassword = await bcrypt.hash(password, 10);
-    // Create new user
-    const newUser = new User({ email, password: hashedPassword, username, mobile });
-    //Save user
-    await newUser.save();
-    return res.status(201).send({ message: 'User registered successfully', status: 201 });
+    // Hash the password before storing
+    const hashedPassword = await bcrypt.hash(password, 10)
+
+    // Create and save a new user document
+    const newUser = new User({ email, password: hashedPassword, username, mobile })
+    await newUser.save()
+
+    return res.status(201).send({ message: 'User registered successfully', status: 201 })
   } catch (error) {
-    // console.error('Error:', error);
-    res.status(500).send({ message: 'Internal server error' });
+    res.status(500).send({ message: 'Internal server error' })
   }
 })
 
-export default router;
+// Export the router to be used in your main app
+export default router
