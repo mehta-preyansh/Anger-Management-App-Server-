@@ -3,9 +3,8 @@
 // ==============================================
 
 import { Router } from 'express';
-import User from "../modals/user.js";
-import bcrypt from "bcrypt";
 import dotenv from 'dotenv';
+import admin from '../config/firebaseConfig.js';
 dotenv.config();
 
 // Create a new Express router instance
@@ -18,7 +17,7 @@ const router = Router();
 // ==========================
 router.post("/notification", async (req, res) => {
   console.log(req.body); // Log the received payload for inspection or debugging
-
+  
   // Return 204 No Content regardless of body
   res.status(204).send();
 });
@@ -37,6 +36,59 @@ router.get("/notification", async (req, res) => {
   } else {
     console.log("Notification verification failed");
     return res.status(404).send();
+  }
+});
+
+// ==========================
+// @route   POST /notification/send
+// @desc    Endpoint to send notifications to specific users
+// @access  Public
+// @body    { deviceToken: string, title: string, body: string, data?: object }
+// ==========================
+router.post("/notification/send", async (req, res) => {
+  try {
+    const { deviceToken, title, body, data } = req.body;
+
+    // Validate required fields
+    if (!deviceToken || !title || !body) {
+      return res.status(400).json({
+        success: false,
+        message: "Missing required fields: deviceToken, title, and body are required"
+      });
+    }
+
+    // Create the notification message
+    const message = {
+      token: deviceToken,
+      notification: {
+        title: title,
+        body: body
+      },
+      data: data || {},
+      android: {
+        priority: 'high',
+        notification: {
+          sound: 'custom_sound',
+          channelId: 'angerApp'
+        }
+      }
+    };
+
+    // Send the notification
+    const response = await admin.messaging().send(message);
+    
+    return res.status(200).json({
+      success: true,
+      message: "Notification sent successfully",
+      response: response
+    });
+  } catch (error) {
+    console.error("Error sending notification:", error);
+    return res.status(500).json({
+      success: false,
+      message: "Failed to send notification",
+      error: error.message
+    });
   }
 });
 

@@ -2,7 +2,6 @@
 import { Router } from 'express'
 import User from "../modals/user.js"
 import downloadResource from '../utils/downloadResource.js'
-import bcrypt from "bcrypt" // Imported but not used here—can be removed if unused
 import { ObjectId } from 'mongodb'
 
 // Create a new Express router instance

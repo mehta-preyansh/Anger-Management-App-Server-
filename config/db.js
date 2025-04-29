@@ -10,15 +10,15 @@ const connectDB = async () => {
     // ✅ Connected successfully
     // NOTE: For production, avoid logging internal hostnames or sensitive info.
     // Uncomment the line below for debugging during development:
-    // console.log(`Connected to database! - ${mongoose.connection.host}`)
+    console.log(`Connected to database! - ${mongoose.connection.host}`)
   } catch (e) {
     // ❌ Connection failed
     // NOTE: In production, avoid logging full error details. Log a generic message instead.
     // Uncomment the line below for debugging during development:
-    // console.log(`Error establishing connection - ${e}`)
+    console.log(`Error establishing connection - ${e}`)
 
     // Production-safe log message
-    console.log("Database connection failed.")
+    // console.log("Database connection failed.")
   }
 }
 

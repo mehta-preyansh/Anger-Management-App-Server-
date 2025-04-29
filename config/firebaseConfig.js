@@ -2,7 +2,7 @@
 import admin from 'firebase-admin'
 
 // Importing the service account credentials (JSON file)
-// ⚠️ NOTE: This file contains sensitive credentials.
+// NOTE: This file contains sensitive credentials.
 // Make sure it's listed in .gitignore and never exposed publicly.
 import serviceAccount from './serviceAccountKey.js'
 
